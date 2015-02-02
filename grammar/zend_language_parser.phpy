@@ -179,6 +179,7 @@ inner_statement:
 
 statement:
       '{' inner_statement_list '}'                          { $$ = $2; }
+    | '{' inner_statement_list error                        { $$ = $2; }
     | T_IF parentheses_expr statement elseif_list else_single
           { $$ = Stmt\If_[$2, [stmts: toArray($3), elseifs: $4, else: $5]]; }
     | T_IF parentheses_expr ':' inner_statement_list new_elseif_list new_else_single T_ENDIF ';'
@@ -212,6 +213,7 @@ statement:
     | T_THROW expr ';'                                      { $$ = Stmt\Throw_[$2]; }
     | T_GOTO T_STRING ';'                                   { $$ = Stmt\Goto_[$2]; }
     | T_STRING ':'                                          { $$ = Stmt\Label[$1]; }
+    | error                                                 { $$ = array(); /* means: no statement */ }
 ;
 
 catches:
@@ -432,7 +434,7 @@ static_var:
 ;
 
 class_statement_list:
-      class_statement_list class_statement                  { push($1, $2); }
+      class_statement_list class_statement                  { if ($2 != null) push($1, $2); }
     | /* empty */                                           { init(); }
 ;
 
@@ -442,6 +444,7 @@ class_statement:
     | method_modifiers T_FUNCTION optional_ref T_STRING '(' parameter_list ')' method_body
           { $$ = Stmt\ClassMethod[$4, [type: $1, byRef: $3, params: $6, stmts: $8]]; }
     | T_USE name_list trait_adaptations                     { $$ = Stmt\TraitUse[$2, $3]; }
+    | error '}'                                             { $$ = null; }
 ;
 
 trait_adaptations:
@@ -612,6 +615,7 @@ expr:
 parentheses_expr:
       '(' expr ')'                                          { $$ = $2; }
     | '(' yield_expr ')'                                    { $$ = $2; }
+    | '(' error ')'                                         { $$ = Expr\Error[]; }
 ;
 
 yield_expr:

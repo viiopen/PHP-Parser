@@ -3,6 +3,7 @@
 namespace PhpParser;
 
 use PhpParser\Comment;
+use PhpParser\Node\Scalar\String;
 
 require_once __DIR__ . '/CodeTestAbstract.php';
 
@@ -31,15 +32,24 @@ class ParserTest extends CodeTestAbstract
      * @dataProvider provideTestParseFail
      */
     public function testParseFail($name, $code, $msg) {
-        $parser = new Parser(new Lexer\Emulative);
+        $errors = array();
+        $parser = new Parser(new Lexer\Emulative, array(
+            'errorCallback' => function($msg, $line) use(&$errors) {
+                $errors[] = $msg . ' on line ' . $line;
+            }
+        ));
+        $dumper = new NodeDumper;
 
         try {
-            $parser->parse($code);
-
-            $this->fail(sprintf('"%s": Expected Error', $name));
+            $stmts = $parser->parse($code);
+            if ($stmts != array()) {
+                $errors[] = $dumper->dump($stmts);
+            }
         } catch (Error $e) {
-            $this->assertSame($msg, $e->getMessage(), $name);
+            $errors[] = $e->getMessage();
         }
+
+        $this->assertSame($this->canonicalize($msg), implode("\n", $errors), $name);
     }
 
     public function provideTestParseFail() {

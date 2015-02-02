@@ -1,0 +1,199 @@
+2
+-----
+<?php
+abc;
+1 + ;
+-----
+Syntax error, unexpected ';' on line 3
+array(
+    0: Expr_ConstFetch(
+        name: Name(
+            parts: array(
+                0: abc
+            )
+        )
+    )
+)
+-----
+<?php
+function test() {
+    1 +
+}
+-----
+Syntax error, unexpected '}' on line 4
+array(
+    0: Stmt_Function(
+        byRef: false
+        name: test
+        params: array(
+        )
+        stmts: array(
+        )
+    )
+)
+-----
+<?php
+class Test {
+    public function a() {
+    }
+    public b() {
+        echo 24;
+    }
+    public function c() {
+    }
+}
+-----
+Syntax error, unexpected T_STRING, expecting T_FUNCTION on line 5
+array(
+    0: Stmt_Class(
+        type: 0
+        name: Test
+        extends: null
+        implements: array(
+        )
+        stmts: array(
+            0: Stmt_ClassMethod(
+                type: 1
+                byRef: false
+                name: a
+                params: array(
+                )
+                stmts: array(
+                )
+            )
+            1: Stmt_ClassMethod(
+                type: 1
+                byRef: false
+                name: c
+                params: array(
+                )
+                stmts: array(
+                )
+            )
+        )
+    )
+)
+-----
+<?php
+
+$i = 0;
+while
+
+$j = 1;
+$k = 2;
+-----
+Syntax error, unexpected T_VARIABLE, expecting '(' on line 6
+array(
+    0: Expr_Assign(
+        var: Expr_Variable(
+            name: i
+        )
+        expr: Scalar_LNumber(
+            value: 0
+        )
+    )
+    1: Expr_Assign(
+        var: Expr_Variable(
+            name: j
+        )
+        expr: Scalar_LNumber(
+            value: 1
+        )
+    )
+    2: Expr_Assign(
+        var: Expr_Variable(
+            name: k
+        )
+        expr: Scalar_LNumber(
+            value: 2
+        )
+    )
+)
+-----
+<?php
+
+$i = 0;
+while () {
+    $j = 1;
+}
+$k = 2;
+-----
+Syntax error, unexpected ')' on line 4
+array(
+    0: Expr_Assign(
+        var: Expr_Variable(
+            name: i
+        )
+        expr: Scalar_LNumber(
+            value: 0
+        )
+    )
+    1: Stmt_While(
+        cond: Expr_Error(
+        )
+        stmts: array(
+            0: Expr_Assign(
+                var: Expr_Variable(
+                    name: j
+                )
+                expr: Scalar_LNumber(
+                    value: 1
+                )
+            )
+        )
+    )
+    2: Expr_Assign(
+        var: Expr_Variable(
+            name: k
+        )
+        expr: Scalar_LNumber(
+            value: 2
+        )
+    )
+)
+-----
+<?php
+
+$i = 0;
+while (true) {
+    $i = 1;
+    $i = 2;
+-----
+Syntax error, unexpected EOF on line 6
+array(
+    0: Expr_Assign(
+        var: Expr_Variable(
+            name: i
+        )
+        expr: Scalar_LNumber(
+            value: 0
+        )
+    )
+    1: Stmt_While(
+        cond: Expr_ConstFetch(
+            name: Name(
+                parts: array(
+                    0: true
+                )
+            )
+        )
+        stmts: array(
+            0: Expr_Assign(
+                var: Expr_Variable(
+                    name: i
+                )
+                expr: Scalar_LNumber(
+                    value: 1
+                )
+            )
+            1: Expr_Assign(
+                var: Expr_Variable(
+                    name: i
+                )
+                expr: Scalar_LNumber(
+                    value: 2
+                )
+            )
+        )
+    )
+)

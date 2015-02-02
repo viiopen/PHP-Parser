@@ -1,0 +1,67 @@
+1
+-----
+<?php
+
+foo()
+bar()
+baz()
+-----
+Syntax error, unexpected T_STRING on line 4
+Syntax error, unexpected T_STRING on line 5
+Syntax error, unexpected EOF on line 5
+-----
+<?php
+
+foo()
+bar();
+baz();
+-----
+Syntax error, unexpected T_STRING on line 4
+array(
+    0: Expr_FuncCall(
+        name: Name(
+            parts: array(
+                0: bar
+            )
+        )
+        args: array(
+        )
+    )
+    1: Expr_FuncCall(
+        name: Name(
+            parts: array(
+                0: baz
+            )
+        )
+        args: array(
+        )
+    )
+)
+-----
+<?php
+
+foo();
+bar()
+baz();
+-----
+Syntax error, unexpected T_STRING on line 5
+array(
+    0: Expr_FuncCall(
+        name: Name(
+            parts: array(
+                0: foo
+            )
+        )
+        args: array(
+        )
+    )
+    1: Expr_FuncCall(
+        name: Name(
+            parts: array(
+                0: baz
+            )
+        )
+        args: array(
+        )
+    )
+)

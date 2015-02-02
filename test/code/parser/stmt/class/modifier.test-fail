@@ -27,6 +27,17 @@ Cannot use the final modifier on an abstract class member on line 1
 <?php abstract final class A { }
 -----
 Syntax error, unexpected T_FINAL, expecting T_CLASS on line 1
+array(
+    0: Stmt_Class(
+        type: 32
+        name: A
+        extends: null
+        implements: array(
+        )
+        stmts: array(
+        )
+    )
+)
 -----
 <?php class A { abstract $a; }
 -----
